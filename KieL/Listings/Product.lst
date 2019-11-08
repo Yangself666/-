@@ -1,0 +1,74 @@
+C51 COMPILER V9.54   PRODUCT                                                               11/01/2019 17:14:20 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE PRODUCT
+OBJECT MODULE PLACED IN .\Objects\Product.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Product.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\P
+                    -roduct.lst) TABS(2) OBJECT(.\Objects\Product.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include <Delay.h>
+   3          #include <Display.h>
+   4          
+   5          unsigned char MODE = 0;
+   6          unsigned int delayCount = 0 ;
+   7          unsigned int isProduct = 0 ;//1是正常计数，5是物品卡住
+   8          void Product(){
+   9   1        switch(MODE){
+  10   2          case 0:{
+  11   3            if(P2_0 == 0){
+  12   4              MODE = 1;
+  13   4            }
+  14   3          }break;
+  15   2          
+  16   2          case 1:{
+  17   3            delayCount ++ ;
+  18   3            if(delayCount >50){
+  19   4              delayCount = 0;
+  20   4              if(P2_0 == 1){
+  21   5                MODE = 0 ;
+  22   5              }else{
+  23   5                MODE = 2 ;
+  24   5              }
+  25   4            }
+  26   3          }break;
+  27   2          
+  28   2          case 2:{
+  29   3            delayCount ++ ;
+  30   3            Delay(500);//停留多少秒
+  31   3            if(P2_0 == 1){
+  32   4              isProduct = 1 ;
+  33   4              MODE = 0 ;
+  34   4            }else{
+  35   4              MODE = 3 ;
+  36   4            }
+  37   3          }break;
+  38   2          case 3:{
+  39   3            delayCount++;
+  40   3            if(delayCount > 5000){
+  41   4              delayCount = 0 ;
+  42   4              if(P2_0 == 0){
+  43   5                isProduct = 5 ;//xiang
+  44   5              }
+  45   4            }
+  46   3          }break;
+  47   2        }
+  48   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    117    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.54   PRODUCT                                                               11/01/2019 17:14:20 PAGE 2   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

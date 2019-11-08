@@ -1,0 +1,82 @@
+C51 COMPILER V9.54   TIMER                                                                 11/01/2019 17:14:20 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\Objects\Timer.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Timer.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Tim
+                    -er.lst) TABS(2) OBJECT(.\Objects\Timer.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          
+   4          
+   5          //设置1ms的定时器Timer0
+   6          void Timer0(void)
+   7          {
+   8   1        TMOD &= 0xF0;
+   9   1        TMOD |= 0x01;
+  10   1        TL0 = 0x18;
+  11   1        TH0 = 0xFC;
+  12   1        TF0 = 0;
+  13   1        TR0 = 1;
+  14   1        ET0 = 1;
+  15   1        EA  = 1;
+  16   1        PT0 = 0;
+  17   1      }
+  18          //定时器0使用模板
+  19          //void Timer0_run() interrupt 1{
+  20          //  static unsigned int T0Count = 0;
+  21          //  TL0 = 0x18;
+  22          //  TH0 = 0xFC;
+  23          //  T0Count ++ ;
+  24          //  if(T0Count >= 1000){
+  25          //    T0Count = 0;
+  26          //    //toDo
+  27          //  }
+  28          //}
+  29          
+  30          //设置1ms的定时器Timer1
+  31          //void Timer1(void)
+  32          //{
+  33          //  TMOD &= 0x0F;
+  34          //  TMOD |= 0x10;
+  35          //  TL0 = 0x18;
+  36          //  TH0 = 0xFC;
+  37          //  TF1 = 0;
+  38          //  TR1 = 1;
+  39          //  ET1 = 1;
+  40          //  EA  = 1;
+  41          //  PT1 = 0;
+  42          //}
+  43          
+  44          
+  45          
+  46          //定时器1使用模板
+  47          //void Timer1_run() interrupt 3{
+  48          //  static unsigned int T0Count = 0;
+  49          //  TL0 = 0x18;
+  50          //  TH0 = 0xFC;
+  51          //  T0Count ++ ;
+  52          //  if(T0Count >= 1000){
+  53          //    T0Count = 0;
+  54          //    //toDo
+C51 COMPILER V9.54   TIMER                                                                 11/01/2019 17:14:20 PAGE 2   
+
+  55          //  }
+  56          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     23    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
