@@ -1,0 +1,128 @@
+C51 COMPILER V9.54   DISPLAY                                                               03/13/2020 08:50:40 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\Objects\Display.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Display.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\D
+                    -isplay.lst) TABS(2) OBJECT(.\Objects\Display.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include <Delay.h>
+   3          
+   4          //为了程序使用方便，将数码管用到的字符进行定义
+   5          //在P0口进行使用
+   6          #define NUMNULL 0xFF;
+   7          #define NUM0 0xC0;
+   8          #define NUM1 0xF9;
+   9          #define NUM2 0xA4;
+  10          #define NUM3 0xB0;
+  11          #define NUM4 0x99;
+  12          #define NUM5 0x92;
+  13          #define NUM6 0x82;
+  14          #define NUM7 0xF8;
+  15          #define NUM8 0x80;
+  16          #define NUM9 0x90;
+  17          #define NUME 0x86;
+  18          #define N_RUN 0xBF;
+  19          //再将数码管的控制窗口进行定义，方便进行控制
+  20          //在P1口进行使用
+  21          #define W0 0x1;
+  22          #define W1 0x2;
+  23          #define W2 0x4;
+  24          #define W3 0x8;
+  25          
+  26          
+  27          //将数字显示放到数组中方便使用,P0
+  28          unsigned char num[] = {0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92, 0x82, 0xF8, 0x80, 0x90};
+  29          //P1
+  30          unsigned char win[] = {0x1, 0x2, 0x4, 0x8};
+  31          
+  32          //将10进制的数字转换成数码管显示的方法
+  33          void Display(unsigned int number)
+  34          {
+  35   1        //千位
+  36   1        int temp = number / 1000;
+  37   1        P1 = win[3];
+  38   1        P0 = num[temp];
+  39   1        Delay(1);
+  40   1        //百位
+  41   1        number = number % 1000;
+  42   1        temp = number / 100;
+  43   1        P1 = win[2];
+  44   1        P0 = num[temp];
+  45   1        Delay(1);
+  46   1        //十位
+  47   1        number = number % 100;
+  48   1        temp = number / 10;
+  49   1        P1 = win[1];
+  50   1        P0 = num[temp];
+  51   1        Delay(1);
+  52   1        //个位
+  53   1        temp = number % 10;
+  54   1        P1 = win[0];
+C51 COMPILER V9.54   DISPLAY                                                               03/13/2020 08:50:40 PAGE 2   
+
+  55   1        P0 = num[temp];
+  56   1        Delay(1);
+  57   1      }
+  58          void DisplayErr1()
+  59          {
+  60   1        P1 = win[3];
+  61   1        P0 = NUME;
+  62   1        Delay(1);
+  63   1        P1 = win[2];
+  64   1        P0 = NUM0;
+  65   1        Delay(1);
+  66   1        P1 = win[1];
+  67   1        P0 = NUM0;
+  68   1        Delay(1);
+  69   1        P1 = win[0];
+  70   1        P0 = NUM1;
+  71   1        Delay(1);
+  72   1      }
+  73          void DisplayErr2()
+  74          {
+  75   1        P1 = win[3];
+  76   1        P0 = NUME;
+  77   1        Delay(1);
+  78   1        P1 = win[2];
+  79   1        P0 = NUM0;
+  80   1        Delay(1);
+  81   1        P1 = win[1];
+  82   1        P0 = NUM0;
+  83   1        Delay(1);
+  84   1        P1 = win[0];
+  85   1        P0 = NUM2;
+  86   1        Delay(1);
+  87   1      }
+  88          
+  89          void DisplayRunning(){
+  90   1        P1 = win[3];
+  91   1        P0 = N_RUN;
+  92   1        Delay(1);
+  93   1        P1 = win[2];
+  94   1        P0 = N_RUN;
+  95   1        Delay(1);
+  96   1        P1 = win[1];
+  97   1        P0 = N_RUN;
+  98   1        Delay(1);
+  99   1        P1 = win[0];
+ 100   1        P0 = N_RUN;
+ 101   1        Delay(1);
+ 102   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    300    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

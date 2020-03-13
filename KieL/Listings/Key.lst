@@ -1,0 +1,98 @@
+C51 COMPILER V9.54   KEY                                                                   03/13/2020 08:50:40 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\Key.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Key.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Key.l
+                    -st) TABS(2) OBJECT(.\Objects\Key.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include <Delay.h>
+   3          #include <Display.h>
+   4          #include <Data.h>
+*** WARNING C323 IN LINE 1 OF Data.h: newline expected, extra characters found
+   5          #include <EEPROM.h>
+*** WARNING C323 IN LINE 1 OF EEPROM.h: newline expected, extra characters found
+   6          #include <Timer.h>
+*** WARNING C323 IN LINE 1 OF Timer.h: newline expected, extra characters found
+   7          
+   8          //KeyNum1，加1按钮生效
+   9          //KeyNum2，减1按钮生效
+  10          //KeyNum3，清0按钮生效
+  11          unsigned char KeyNum = 0;
+  12          unsigned int testTime;
+  13          unsigned char PressKey()
+  14          {
+  15   1        unsigned int tempCOUNT = dataReader();
+  16   1        testTime = 0;
+  17   1        if (P2_1 == 0)
+  18   1        {
+  19   2          Delay(20);
+  20   2          while (P2_1 == 0)
+  21   2          {
+  22   3            Display(tempCOUNT);
+  23   3          }
+  24   2          Delay(20);
+  25   2          KeyNum = 1;
+  26   2        }
+  27   1        if (P2_2 == 0)
+  28   1        {
+  29   2          Delay(20);
+  30   2          while (P2_2 == 0)
+  31   2          {
+  32   3            Display(tempCOUNT);
+  33   3          }
+  34   2          Delay(20);
+  35   2          KeyNum = 2;
+  36   2        }
+  37   1        if (P2_3 == 0)
+  38   1        {
+  39   2          Delay(20);
+  40   2          while (P2_3 == 0)
+  41   2          {
+  42   3            Display(tempCOUNT);
+  43   3          }
+  44   2          Delay(20);
+  45   2          KeyNum = 3;
+  46   2        }
+  47   1      
+  48   1        //商品
+  49   1        if (P2_0 == 0)
+  50   1        {
+  51   2          Delay(20);
+C51 COMPILER V9.54   KEY                                                                   03/13/2020 08:50:40 PAGE 2   
+
+  52   2          while (P2_0 == 0)
+  53   2          {
+  54   3            DisplayRunning();
+  55   3            testTime++;
+  56   3            if(testTime > 7500)
+  57   3            {
+  58   4              KeyNum = 5;
+  59   4              testTime = 0;
+  60   4              return KeyNum;
+  61   4            }
+  62   3          }
+  63   2          Delay(20);
+  64   2          testTime = 0;
+  65   2          KeyNum = 4;
+  66   2        }
+  67   1      
+  68   1        return KeyNum;
+  69   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    169    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

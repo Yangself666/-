@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\Delay.obj",
+".\Objects\Display.obj",
+".\Objects\Timer.obj",
+".\Objects\Key.obj",
+".\Objects\EEPROM.obj",
+".\Objects\Data.obj",
+".\Objects\Product.obj" 
+TO ".\Objects\count" 
+PRINT(".\Listings\count.m51") RAMSIZE(256) 

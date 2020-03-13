@@ -1,0 +1,228 @@
+C51 COMPILER V9.54   MAIN                                                                  03/13/2020 08:50:40 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include <stdio.h>
+   3          #include <INTRINS.H>
+   4          #include <Delay.h>
+   5          #include <Display.h>
+   6          #include <Key.h>
+   7          #include <EEPROM.h>
+*** WARNING C323 IN LINE 1 OF EEPROM.h: newline expected, extra characters found
+   8          #include <Data.h>
+*** WARNING C323 IN LINE 1 OF Data.h: newline expected, extra characters found
+   9          #include <Timer.h>
+*** WARNING C323 IN LINE 1 OF Timer.h: newline expected, extra characters found
+  10          #include <Uart.h>
+  11          
+  12          #define uchar unsigned char
+  13          #define uint unsigned int 
+  14            
+  15          void uart_cfg();
+  16          void send_byte(uchar by);
+  17          void send_string(uchar *p);
+  18          void toString(unsigned int temp);
+  19          
+  20          //计数常量COUNT
+  21          unsigned int COUNT;
+  22          unsigned int WAIT;
+  23          unsigned int flag ;
+  24          unsigned char name[] = "Device001";
+  25          unsigned char buffer[4];
+  26          void main()
+  27          {
+  28   1        uart_cfg(); //波特率4800,初始化
+  29   1        //一直显示数字，使用中断加减
+  30   1        P2_4 = 0;
+  31   1        //开机先从eeprom中读取数据
+  32   1        COUNT = dataReader();
+  33   1        
+  34   1        Delay(1000);//等待一秒连接wifi
+  35   1        //开机即发送请求
+  36   1        send_string("AT+CIPSTART=\"TCP\",\"yangself.cn\",549\r\n");
+  37   1        Delay(50);
+  38   1        send_string("AT+CIPMODE=1\r\n");
+  39   1        Delay(50);
+  40   1        send_string("AT+CIPSEND\r\n");
+  41   1        Delay(50);
+  42   1        send_string("GET /counter/addData?cName=");
+  43   1        send_string(name);
+  44   1        send_string("&num=");
+  45   1        //这里要把数字转换成字符串
+  46   1        toString(COUNT);
+  47   1        send_string(buffer);
+  48   1        send_string(" HTTP/1.1\r\n");
+  49   1        Delay(50);
+  50   1        send_string("Host: yangself.cn\r\n\r\n");
+  51   1        Delay(50);
+C51 COMPILER V9.54   MAIN                                                                  03/13/2020 08:50:40 PAGE 2   
+
+  52   1        send_string("+++");
+  53   1      
+  54   1        while (1)
+  55   1        {
+  56   2          COUNT = dataReader();
+  57   2          KeyNum = PressKey();
+  58   2          Display(COUNT);
+  59   2          if(flag > 500){//25秒一次从串口发送数据
+  60   3            send_string("AT+CIPSTART=\"TCP\",\"yangself.cn\",549\r\n");
+  61   3            Delay(50);
+  62   3            send_string("AT+CIPMODE=1\r\n");
+  63   3            Delay(50);
+  64   3            send_string("AT+CIPSEND\r\n");
+  65   3            Delay(50);
+  66   3            send_string("GET /counter/addData?cName=");
+  67   3            send_string(name);
+  68   3            send_string("&num=");
+  69   3            //这里要把数字转换成字符串
+  70   3            toString(COUNT);
+  71   3            send_string(buffer);
+  72   3            send_string(" HTTP/1.1\r\n");
+  73   3            Delay(50);
+  74   3            send_string("Host: yangself.cn\r\n\r\n");
+  75   3            Delay(50);
+  76   3            send_string("+++");
+  77   3            flag = 0;
+  78   3          }
+  79   2          flag++;
+  80   2          if (KeyNum == 4)
+  81   2          {
+  82   3            COUNT = dataReader();
+  83   3            COUNT++;
+  84   3            dataWrite(COUNT);
+  85   3            KeyNum = 0;
+  86   3          }
+  87   2          
+  88   2          
+  89   2          COUNT = dataReader();
+  90   2          Display(COUNT);
+  91   2          while (KeyNum == 5)
+  92   2          {       //停留长时间后进入错误界面
+  93   3            P2_4 = 1; //蜂鸣器进行工作
+  94   3            DisplayErr1();
+  95   3          }
+  96   2          
+  97   2          COUNT = dataReader();
+  98   2          Display(COUNT);
+  99   2          if (KeyNum == 1)
+ 100   2          {
+ 101   3            COUNT = dataReader();
+ 102   3            COUNT++;
+ 103   3            dataWrite(COUNT);
+ 104   3            KeyNum = 0;
+ 105   3          }
+ 106   2          COUNT = dataReader();
+ 107   2          Display(COUNT);
+ 108   2          if (KeyNum == 2)
+ 109   2          {
+ 110   3            COUNT = dataReader();
+ 111   3            COUNT--;
+ 112   3            dataWrite(COUNT);
+ 113   3            KeyNum = 0;
+C51 COMPILER V9.54   MAIN                                                                  03/13/2020 08:50:40 PAGE 3   
+
+ 114   3          }
+ 115   2          COUNT = dataReader();
+ 116   2          Display(COUNT);
+ 117   2          if (KeyNum == 3)
+ 118   2          {
+ 119   3            COUNT = 0;
+ 120   3            dataWrite(COUNT);
+ 121   3            KeyNum = 0;
+ 122   3          }
+ 123   2          COUNT = dataReader();
+ 124   2          Display(COUNT);
+ 125   2          if (dataReader() > 9999)
+ 126   2          {
+ 127   3            P2_4 = 1; //蜂鸣器响
+ 128   3            WAIT = 1; //标记位
+ 129   3            while (WAIT)
+ 130   3            {          //不循环无法展示错误信息，使用标记和定时器进行控制循环的停止
+ 131   4              Timer0();   //进行5秒定时任务
+ 132   4              DisplayErr2(); //展示E002
+ 133   4            }
+ 134   3            P2_4 = 0;  //蜂鸣器停止
+ 135   3            COUNT = 0; //计数器置0
+ 136   3            dataWrite(COUNT);
+ 137   3          }
+ 138   2          COUNT = dataReader();
+ 139   2          Display(COUNT);
+ 140   2        }
+ 141   1      }
+ 142          void Timer0_run() interrupt 1
+ 143          {
+ 144   1        static unsigned int T0Count = 0;
+ 145   1        TL0 = 0x18;
+ 146   1        TH0 = 0xFC;
+ 147   1        T0Count++;
+ 148   1        if (T0Count >= 5000)
+ 149   1        {
+ 150   2          T0Count = 0;
+ 151   2          //todo
+ 152   2          WAIT = 0;
+ 153   2        }
+ 154   1      }
+ 155          
+ 156          
+ 157          void uart_cfg(){
+ 158   1       
+ 159   1             SCON = 0X50;//MODE 1
+ 160   1            TMOD&= 0X0F;//清除T1的控制位
+ 161   1            TMOD|= 0X20;//T1的工作模式2
+ 162   1            PCON|= 0X80;//倍频
+ 163   1      
+ 164   1            TH1 = 0xf3; //4800
+ 165   1            TL1 = TH1;
+ 166   1      
+ 167   1            ET1 = 0;//禁止T1中断 
+ 168   1      //      EA = 1; 
+ 169   1            TR1 = 1;      
+ 170   1      //      ES = 1;//使能串口中断 ,无论是TI/RI出现，只要中断打开，单片机就进入中断�
+             -��数。
+ 171   1       }
+ 172          
+ 173           void send_byte(uchar by){
+ 174   1      
+C51 COMPILER V9.54   MAIN                                                                  03/13/2020 08:50:40 PAGE 4   
+
+ 175   1          SBUF = by;
+ 176   1          while(!TI);//当写下这句的时候，就不要在中断函数里面在写TI = 0;这句了，不然�
+             -��入中断函数将TI清零之后，程序就会一直卡在这里
+ 177   1          TI = 0;       //在这里将TI清零
+ 178   1      }
+ 179          /*发送一个字符串*/
+ 180          void send_string(uchar *p){
+ 181   1      
+ 182   1          while(*p!= '\0'){
+ 183   2          
+ 184   2              send_byte(*p);
+ 185   2              p++;
+ 186   2      
+ 187   2          }
+ 188   1      }
+ 189          
+ 190          void toString(unsigned int temp){
+ 191   1        sprintf(buffer, "%d", temp);
+ 192   1      }
+ 193          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    670    ----
+   CONSTANT SIZE    =    141    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     22    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)
